@@ -16,8 +16,6 @@ class Player {
         playerElm.style.bottom = this.positionY + "vh"
         playerElm.style.width = this.witdh + "vw"
         playerElm.style.height = this.height + "vh"
-
-
     }
 
     moveLeft() {
@@ -32,14 +30,62 @@ class Player {
             this.positionX++
             this.updateUI()
         }
+    }
+}
 
+class Obstacle {
+    constructor() {
+        this.width = 10;
+        this.height = 10;
+        this.positionX = Math.floor(Math.random() * (100 - this.width + 1)) 
+        this.positionY = 100;
+        this.obstacleElm = null
 
+        this.createDomElement() // create obstacles 
+        this.updateUI()
+    }
+
+    createDomElement() {
+        // step1: create the element with document.createElement()
+        this.obstacleElm = document.createElement("div")
+
+        // step2: add content or modify
+        this.obstacleElm.className = "obstacle"
+
+        //step3: append to the dom: `parentElm.appendChild()`
+        const parentElm = document.getElementById("board")
+        parentElm.appendChild(this.obstacleElm)
+    }
+
+    updateUI() {
+        this.obstacleElm.style.left = this.positionX + "vw"
+        this.obstacleElm.style.bottom = this.positionY + "vh"
+        this.obstacleElm.style.width = this.width + "vw"
+        this.obstacleElm.style.height = this.height + "vh"
+    }
+
+    moveDow() {
+        this.positionY--
+        this.updateUI()
     }
 }
 
 
 
 const player = new Player()
+
+let obstacleArr = []
+
+// generate new obstacles
+setInterval(() => {
+    const newObstacle = new Obstacle() // cada 4 segundos crear uns instancia de la clase obstacle
+    obstacleArr.push(newObstacle)
+}, 1000);
+
+// move obstacles 
+setInterval(() => {
+    obstacleArr.forEach(obstacleInstance => obstacleInstance.moveDow())
+}, 30);
 
 document.addEventListener("keydown", (e) => {
     if (e.code === "ArrowLeft") {
@@ -49,5 +95,4 @@ document.addEventListener("keydown", (e) => {
         player.moveRight()
         console.log("----->")
     }
-
 })
