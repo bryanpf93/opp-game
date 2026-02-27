@@ -4,7 +4,7 @@ class Player {
     constructor() {
         this.positionX = 50;
         this.positionY = 0;
-        this.witdh = 10;
+        this.width = 10;
         this.height = 10;
 
         this.updateUI()
@@ -14,7 +14,7 @@ class Player {
         const playerElm = document.querySelector("#player")
         playerElm.style.left = this.positionX + "vw"
         playerElm.style.bottom = this.positionY + "vh"
-        playerElm.style.width = this.witdh + "vw"
+        playerElm.style.width = this.width + "vw"
         playerElm.style.height = this.height + "vh"
     }
 
@@ -26,7 +26,7 @@ class Player {
     }
 
     moveRight() {
-        if (this.positionX < 100 - this.witdh) {
+        if (this.positionX < 100 - this.width) {
             this.positionX++
             this.updateUI()
         }
@@ -37,7 +37,7 @@ class Obstacle {
     constructor() {
         this.width = 10;
         this.height = 10;
-        this.positionX = Math.floor(Math.random() * (100 - this.width + 1)) 
+        this.positionX = Math.floor(Math.random() * (100 - this.width + 1))
         this.positionY = 100;
         this.obstacleElm = null
 
@@ -64,7 +64,7 @@ class Obstacle {
         this.obstacleElm.style.height = this.height + "vh"
     }
 
-    moveDow() {
+    moveDown() {
         this.positionY--
         this.updateUI()
     }
@@ -80,12 +80,26 @@ let obstacleArr = []
 setInterval(() => {
     const newObstacle = new Obstacle() // cada 4 segundos crear uns instancia de la clase obstacle
     obstacleArr.push(newObstacle)
-}, 1000);
+}, 4000);
 
 // move obstacles 
 setInterval(() => {
-    obstacleArr.forEach(obstacleInstance => obstacleInstance.moveDow())
-}, 30);
+    obstacleArr.forEach((obstacleInstance, i, arr) => {
+        // move
+        obstacleInstance.moveDown()
+
+        // detect collision
+        if (
+            player.positionX < obstacleInstance.positionX + obstacleInstance.width &&
+            player.positionX + player.width > obstacleInstance.positionX &&
+            player.positionY < obstacleInstance.positionY + obstacleInstance.height &&
+            player.positionY + player.height > obstacleInstance.positionY
+        ) {
+            console.log("game over my fren !")
+            location.href = "gameover.html"
+        }
+    })
+}, 30)
 
 document.addEventListener("keydown", (e) => {
     if (e.code === "ArrowLeft") {
